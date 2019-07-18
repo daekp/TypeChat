@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<h2> Group Chat </h2>
+
+<input type='button' value='privacychat' onclick="location.href='./privacychat'">
+<input type='button' value='groupchat' onclick="location.href='./groupchat'">
+<input type='button' value='openchat' onclick="location.href='./openchat'"> <br><br>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+<script type = "text/javascript">
+    var socket = io.connect("http://localhost:3000");
+    function testsendMsg() {
+        socket.emit("toserver", "Hello Server!");
+    }
+    function sendMsg(){
+        msg = getWriteText()
+        socket.emit("toserver", data)
+    }
+    function test(){
+        alert("Yes")
+    }
+
+    socket.on("toclient", function(data) {
+        document.getElementById("writemsg").innerHTML = data
+        console.log(data)
+    });
+</script>
+<script type = "text/javascript">
+    function onKeyDown()
+    {
+        //
+    }
+    function getWriteText()
+    {
+        data = document.getElementById('sendbox').value
+        return data
+    }
+</script>
+
+<textarea name='viewchat' wrap='off' rows='40' cols='40' disabled></textarea><br>
+
+<form id="chatForm" onsubmit="return false">
+    <textarea name='writemsg' id='sendbox' wrap='off' rows='6' cols='40'></textarea><br>
+    <input type='button' value='SEND' onclick='testsendMsg();'>
+</form>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>chat</title>
+    <h2> Welcome Open Chat</h2>
+    <style>
+      .chat_log{ width: 350px; height: 600px; }
+      .name{ width: 30px; }
+      .message{ width: 221px; }
+      .chat{ width: 10%; }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <form id="setusername">
+          Username : <input id="name" type="text" style="width:150px" autocomplete=off>
+          <input id="setnamebtn" type="button" value="참가" onclick="setname()"> <br>
+          현재 접속자 수 : <input id="totaluserview" type="text" style="width:50px" autocomplete=off readonly>
+      </form>
+      <textarea id="chatcontents" class="chat_log" readonly></textarea>
+    </div>
+    <form id="chat">
+      <input id="message" class="message" type="text" autocomplete=off readonly>
+      <input id="send" type="submit" class="chat" value="보내기" disabled/>
+    </form>
+    <div id="box" class="box">
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script type = "text/javascript">
+    var socket = io.connect("http://localhost:3000");
+    
+    function setname(){
+      socket.emit('setname', $('#name').val());
+      totaluser()
+      document.getElementById('name').readOnly = true; 
+      document.getElementById('setnamebtn').disabled = true;
+      document.getElementById('message').readOnly = false; 
+      document.getElementById('send').disabled = false;
+    }
+
+    function totaluser(){
+      socket.emit('totaluser', '');
+    }
+    socket.on('totaluser', function(total){
+      document.getElementById('totaluserview').value = total
+    })
+
+    $('#chat').on('submit', function(e){
+      socket.emit('from_client_message', $('#name').val(), $('#message').val());
+      $('#message').val(""); // 보내고 나서 지워주는
+      $("#message").focus();
+      e.preventDefault();
+    });
+    socket.on('to_client_message', function(msg){
+      $('#chatcontents').append(msg+"\n");
+      $('#chatcontents').scrollTop($('#chatcontents')[0].scrollHeight);
+    });
+    
+    </script>
+  </body>
+</html>
