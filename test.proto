@@ -1,0 +1,17 @@
+//  * required : message는 이 필드를 정확히 1개만 가진다.
+//  * optional : message는 이 필드를 가지지 않거나 1개만 가진다(1보다 크지 않다).
+//  * repeated : 이 필드는 여러번(0번을 포함해서) 반복될 수 있다. 반복되는 값의 순서는 보존된다.
+
+syntax = "proto3";
+
+message Roomtype {
+    required string privacy = 1;
+    required string group = 2;
+    required string open = 3;
+}
+
+message Permission {
+    required string administrator = 1;
+    required string asd = 2;
+    required string open = 3;
+}
