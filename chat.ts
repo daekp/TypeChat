@@ -26,7 +26,7 @@ app.get('/groupchat', function(req:any, res:any) {
 })
 */
 
-let userlist:string[][] = []
+let userlist:string[][] = [] 
 io.on('connection', function(socket){
   console.log('user connected: ', socket.id);
 
