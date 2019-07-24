@@ -1,0 +1,6 @@
+#folder
+Library/
+Temp/
+ 
+#file
+*.apk

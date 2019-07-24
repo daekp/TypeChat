@@ -2,29 +2,23 @@ import * as express from 'express'
 import * as http from 'http'
 import * as socketIO from 'socket.io'
 import * as path from 'path'
-import { appendFileSync } from 'fs';
+import * as type from './generated/type_pb'
  
 const app = express()
-const server = http.createServer(app);
+const server = http.createServer(app)
 const io = socketIO.listen(server)
+const roomtype = new type.Roomtype()
+const permission = new type.Permission()
 
 app.set("port", 3000)
 
 app.get('/', function(req:any, res:any) {
-    res.sendFile(path.resolve("./html/openchat.html"));
+    res.sendFile(path.resolve("./html/openchat.html"))
 })
 
 app.get('/openchat', function(req:any, res:any) {
-    res.sendFile(path.resolve("./html/openchat.html"));
+    res.sendFile(path.resolve("./html/openchat.html"))
 })
-/*
-app.get('/privacychat', function(req:any, res:any) {
-    res.sendFile(path.resolve("./html/privacychat.html"));
-})
-app.get('/groupchat', function(req:any, res:any) {
-    res.sendFile(path.resolve("./html/groupchat.html"));
-})
-*/
 
 let userlist:string[][] = []
 io.on('connection', function(socket){
@@ -32,7 +26,7 @@ io.on('connection', function(socket){
 
   socket.emit('totaluser', userlist.length.toString())
 
-  socket.on('setname', function(name){
+  socket.on('setname', function(name:string){
     userlist.push([socket.id, name]) // id, name 배열에 추가
     io.to(socket.id).emit('setname',name);
     socket.broadcast.emit('to_client_message', '[' + name + ']' + '님이 입장하였습니다.')
@@ -54,7 +48,7 @@ io.on('connection', function(socket){
     }
   });
   
-  socket.on('from_client_message', function(name,text){
+  socket.on('from_client_message', function(name:string,text:string){
     if(text != ''){ // 공백 막아보리기
       let msg = name + ' : ' + text;
       console.log(msg);

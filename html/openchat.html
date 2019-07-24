@@ -55,7 +55,7 @@
       e.preventDefault();
     });
     socket.on('to_client_message', function(msg){
-      $('#chatcontents').append(msg+"\n");
+      $('#chatcontents').append(msg + "\n");
       $('#chatcontents').scrollTop($('#chatcontents')[0].scrollHeight);
     });
     
