@@ -1,5 +1,6 @@
 import * as express from 'express'
 import * as http from 'http'
+import * as socketSession from 'express-socket.io-session'
 import * as socketIO from 'socket.io'
 import * as path from 'path'
 import { appendFileSync } from 'fs';
@@ -7,6 +8,7 @@ import { appendFileSync } from 'fs';
 const app = express()
 const server = http.createServer(app);
 const io = socketIO.listen(server)
+const session = socketSession(io)
 
 app.set("port", 3000)
 
@@ -17,6 +19,7 @@ app.get('/', function(req:any, res:any) {
 app.get('/openchat', function(req:any, res:any) {
     res.sendFile(path.resolve("./html/openchat.html"));
 })
+
 /*
 app.get('/privacychat', function(req:any, res:any) {
     res.sendFile(path.resolve("./html/privacychat.html"));
