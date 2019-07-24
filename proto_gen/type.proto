@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+message Roomtype {
+    required string privacy = 1;
+    required string group = 2;
+    required string open = 3;
+}
+
+message Permission {
+    required string administrator = 1;
+    required string asd = 2;
+    required string open = 3;
+}
