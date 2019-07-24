@@ -1,0 +1,8 @@
+#folder
+node_modules/
+
+#files
+package-lock.json
+package.json
+tsconfig.json
+chat.js

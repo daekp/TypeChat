@@ -1,46 +1,65 @@
 <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Group Chat</title>
+    <h2> Welcome Group Chat</h2>
+    <style>
+      .chat_log{ width: 350px; height: 600px; }
+      .name{ width: 30px; }
+      .message{ width: 221px; }
+      .chat{ width: 10%; }
+    </style>
+  </head>
 
-<h2> Group Chat </h2>
+  <body>
+    <div>
+      <form id="setusername">
+          Group ID : &nbsp; <input id="groupid" type="text" style="width:150px" autocomplete=off>
+          <input id="setGroupbtn" type="button" value="SET" onclick="chkGroup()">
+          <input id="createGroupbtn" type="button" value="Create Group" onclick="#"> <br>
+          Username : <input id="name" type="text" style="width:150px" autocomplete=off>
+          <input id="setnamebtn" type="button" value="JOIN" onclick="setname()"> <br><br>
+      </form>
+      <textarea id="chatcontents" class="chat_log" readonly></textarea>
+    </div>
+    <form id="chat">
+        <input id="message" class="message" type="text" autocomplete=off readonly>
+        <input id="send" type="submit" class="chat" value="보내기" disabled/>
+    </form>
+    <div id="box" class="box">
 
-<input type='button' value='privacychat' onclick="location.href='./privacychat'">
-<input type='button' value='groupchat' onclick="location.href='./groupchat'">
-<input type='button' value='openchat' onclick="location.href='./openchat'"> <br><br>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script type = "text/javascript">
+    var socket = io.connect("http://localhost:3000/groupchat");
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-<script type = "text/javascript">
-    var socket = io.connect("http://localhost:3000");
-    function testsendMsg() {
-        socket.emit("toserver", "Hello Server!");
+    function chkGroup(){
+        socket.emit('chkgroupid', $('#groupid').val())
+        document.getElementById('setnamebtn').disabled = false;
     }
-    function sendMsg(){
-        msg = getWriteText()
-        socket.emit("toserver", data)
-    }
-    function test(){
-        alert("Yes")
+    function setname(){
+        socket.emit('setname', $('#groupid').val(), $('#name').val());
+        $('#chatcontents').append('['+ $('#groupid').val() + ']' + "방에 입장하였습니다. \n");
+        document.getElementById('setnamebtn').disabled = true;
+        document.getElementById('message').readOnly = false; 
+        document.getElementById('send').disabled = false;
+        socket.join($('#groupid').val())
     }
 
-    socket.on("toclient", function(data) {
-        document.getElementById("writemsg").innerHTML = data
-        console.log(data)
+    //socket.on('grouperror', alert("없는 방입니다."))
+
+    $('#chat').on('submit', function(e){
+      socket.emit('from_client_message', $('#groupid').val(), $('#name').val(), $('#message').val());
+      $('#message').val(""); // 보내고 나서 지워주는
+      $("#message").focus();
+      e.preventDefault();
     });
-</script>
-<script type = "text/javascript">
-    function onKeyDown()
-    {
-        //
-    }
-    function getWriteText()
-    {
-        data = document.getElementById('sendbox').value
-        return data
-    }
-</script>
-
-<textarea name='viewchat' wrap='off' rows='40' cols='40' disabled></textarea><br>
-
-<form id="chatForm" onsubmit="return false">
-    <textarea name='writemsg' id='sendbox' wrap='off' rows='6' cols='40'></textarea><br>
-    <input type='button' value='SEND' onclick='testsendMsg();'>
-</form>
+    socket.on('to_client_message', function(msg){
+      $('#chatcontents').append(msg + "\n");
+      $('#chatcontents').scrollTop($('#chatcontents')[0].scrollHeight);
+    });
+    
+    </script>
+  </body>
 </html>
