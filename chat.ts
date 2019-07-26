@@ -28,7 +28,7 @@ const openchat = io.of('/openchat')
 const groupchat = io.of('/groupchat')
 const privacychat = io.of('/privacychat')
 
-
+ 
 console.log(roomlist)
 
 // OPENCHAT NAMESPACE
